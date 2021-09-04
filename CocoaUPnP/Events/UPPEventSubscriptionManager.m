@@ -45,7 +45,7 @@
 - (void)addNotificationObservers
 {
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-
+    #if TARGET_OS_IPHONE
     [nc addObserver:self
            selector:@selector(invalidateAllTimers)
                name:UIApplicationDidEnterBackgroundNotification
@@ -55,6 +55,17 @@
            selector:@selector(renewAllTimers)
                name:UIApplicationDidBecomeActiveNotification
              object:nil];
+    #else
+    [nc addObserver:self
+           selector:@selector(invalidateAllTimers)
+               name:NSApplicationDidFinishLaunchingNotification
+             object:nil];
+
+    [nc addObserver:self
+           selector:@selector(renewAllTimers)
+               name:NSApplicationDidBecomeActiveNotification
+             object:nil];
+    #endif
 }
 
 #pragma mark - Lazy Instantiation
